@@ -1,7 +1,8 @@
 class Response:
 
-	def __init__(self):
+	def __init__(self, conn):
 		self.headers = []
+		self.conn = conn
 		pass
 
 	def setStatus(self, code, status):
@@ -19,15 +20,15 @@ class Response:
 		return res_string
 
 
-	def compileTestResponse(self):
+	def sendTest(self):
 		self.setStatus(200, "OK")
 		self.setHeader("Content-Type:text/html")
 
-		body = "<b> Purr, Purr </b>"
+		body = "<b> Hola! </b>"
 
-		return self.appendHeaderTo(body)
+		self.conn.sendall(self.appendHeaderTo(body))
 
-	def compileNotFoundResponse(self, path=None):
+	def sendNotFound(self, path=None):
 		self.setStatus(404, "Not Found")
 		self.setHeader("Content-Type:text/html")
 
@@ -40,10 +41,10 @@ class Response:
 			except IOError:
 				pass
 
-		return self.appendHeaderTo(body)
+		self.conn.sendall(self.appendHeaderTo(body))
 
 
-	def compileHtmlResponse(self, path):
+	def sendHtml(self, path):
 		try:
 			f = open(path, 'r')
 			body = reduce(lambda a, b: a.strip() + b.strip(), f.readlines())
@@ -51,12 +52,12 @@ class Response:
 
 			self.setStatus(200, "OK")
 			self.setHeader("Content-Type:text/html")
-			return self.appendHeaderTo(body)
+			self.conn.sendall(self.appendHeaderTo(body))
 
 		except IOError:
-			return self.compileNotFoundResponse('./www/error.html')
+			return self.sendNotFound('./www/error.html')
 
-	def compilePngResponse(self, path):
+	def sendPng(self, path):
 		try:
 			f = open(path, 'r')
 			body = f.read()
@@ -64,9 +65,9 @@ class Response:
 
 			self.setStatus(200, "OK")
 			self.setHeader("Content-Type:image/png")
-			return self.appendHeaderTo(body)
+			self.conn.sendall(self.appendHeaderTo(body))
 
 		except:
-			return self.compileNotFoundResponse('./www/error.html')
+			self.sendNotFound('./www/error.html')
 
 
