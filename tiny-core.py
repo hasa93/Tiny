@@ -14,6 +14,7 @@ print "Tiny is listening on", PORT
 routes.add('/', lambda res: res.sendHtml('./www/index.html'))
 routes.add('/index2', lambda res: res.sendHtml('./www/index2.html'))
 routes.add('/tiny', lambda res: res.sendPng('./www/img/cat.png'))
+routes.add('/tiny-css', lambda res: res.sendCss('./www/css/style.css'))
 
 while True:
 	conn, addr = sock_conn.accept()

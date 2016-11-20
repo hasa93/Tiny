@@ -47,7 +47,7 @@ class Response:
 	def sendHtml(self, path):
 		try:
 			f = open(path, 'r')
-			body = reduce(lambda a, b: a.strip() + b.strip(), f.readlines())
+			body = f.read()
 			f.close()
 
 			self.setStatus(200, "OK")
@@ -65,6 +65,19 @@ class Response:
 
 			self.setStatus(200, "OK")
 			self.setHeader("Content-Type:image/png")
+			self.conn.sendall(self.appendHeaderTo(body))
+
+		except:
+			self.sendNotFound('./www/error.html')
+
+	def sendCss(self, path):
+		try:
+			f = open(path, 'r')
+			body = f.read()
+			f.close()
+
+			self.setStatus(200, "OK")
+			self.setHeader("Content-Type:text/css")
 			self.conn.sendall(self.appendHeaderTo(body))
 
 		except:
