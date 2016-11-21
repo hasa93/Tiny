@@ -7,7 +7,7 @@ class Router:
 		try:
 			return self.routes[route]
 		except:
-			raise Exception("Not Defined")
+			raise KeyError("NotDefined")
 
 	def add(self, route, resource):
 		self.routes[route] = resource
